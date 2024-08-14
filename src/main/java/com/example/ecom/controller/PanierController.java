@@ -24,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PanierController {
     private final PanierService panierService;
-    private final ProductService productService;
     private final UserDetailsService userDetailsService;
 
     @GetMapping
@@ -38,49 +37,35 @@ public class PanierController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addPanier(@RequestBody PanierRequest panierRequest) {
-        if (panierRequest.getProduct_id()== null) {
-            return new ResponseEntity<>("PRODUCT ID must not be null", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Panier> addPanier(@RequestBody PanierRequest panierRequest) {
+        if (panierRequest.getUser_username() == null || panierRequest.getUser_username().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (panierRequest.getUser_username() == null || panierRequest.getUser_username().isEmpty()){
-            return new ResponseEntity<>("User ID must not be empty or null", HttpStatus.BAD_REQUEST);
-        }
-
-
 
         try {
-            Product product = productService.getProduct(panierRequest.getProduct_id());
-
-            if (product == null) {
-                return new ResponseEntity<>("product not found", HttpStatus.NOT_FOUND);
-            }
             User user = (User) userDetailsService.loadUserByUsername(panierRequest.getUser_username());
 
             if (user == null) {
-                return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             Panier panier = new Panier();
-            panier.setProduct(product);
             panier.setUser(user);
             panier.setDate(panierRequest.getDate());
             panier.setTotalPrice(panierRequest.getTotalPrice());
 
-
             panierService.addPanier(panier);
 
-            return new ResponseEntity<>("Panier added successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>(panier, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @PutMapping("/{id}")
     public void updatePanier(@PathVariable Long id, @RequestBody PanierRequest panierRequest) {
-        Product product = productService.getProduct(panierRequest.getProduct_id());
         User user = (User) userDetailsService.loadUserByUsername(panierRequest.getUser_username());
         Panier panier = new Panier();
-        panier.setProduct(product);
         panier.setUser(user);
         panier.setDate(panierRequest.getDate());
         panier.setTotalPrice(panierRequest.getTotalPrice());
@@ -90,6 +75,6 @@ public class PanierController {
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         panierService.deletePanier(id);
-    }
+    }   
 
 }

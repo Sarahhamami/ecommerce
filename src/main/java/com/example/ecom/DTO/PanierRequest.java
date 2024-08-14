@@ -12,7 +12,6 @@ public class PanierRequest {
     private Long id;
     private double totalPrice;
     private Date date;
-    private Long product_id;
 
     private String user_username;
 }

@@ -33,7 +33,6 @@ public class PanierServiceImpl implements PanierService{
         Panier existingPanier= panierRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Panier not found with id " + id));
         existingPanier.setDate(panier.getDate());
         existingPanier.setUser(panier.getUser());
-        existingPanier.setProduct(panier.getProduct());
         existingPanier.setTotalPrice(panier.getTotalPrice());
         panierRepository.save(existingPanier);
     }

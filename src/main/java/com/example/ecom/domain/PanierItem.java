@@ -6,20 +6,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Panier {
+public class PanierItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double totalPrice;
-    private Date date;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "panier_id")
+    private Panier Panier;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product productId;
+    private int quantity;
+
+
 }

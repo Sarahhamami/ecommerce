@@ -57,7 +57,7 @@ public class ProductController {
 
             productService.addProduct(product);
 
-            return new ResponseEntity<>("Product added successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>("Product added succeffully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
